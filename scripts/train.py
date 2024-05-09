@@ -14,12 +14,12 @@ import wandb
 #from colossalai.utils import get_current_device, set_seed
 from tqdm import tqdm
 
-from opensora.acceleration.checkpoint import set_grad_checkpoint
-from opensora.acceleration.parallel_states import (
-    get_data_parallel_group,
-    set_data_parallel_group,
-    set_sequence_parallel_group,
-)
+# from opensora.acceleration.checkpoint import set_grad_checkpoint
+# from opensora.acceleration.parallel_states import (
+#     get_data_parallel_group,
+#     set_data_parallel_group,
+#     set_sequence_parallel_group,
+# )
 from opensora.acceleration.plugin import ZeroSeqParallelPlugin
 from opensora.datasets import prepare_dataloader, prepare_variable_dataloader
 from opensora.registry import DATASETS, MODELS, SCHEDULERS, build_module
