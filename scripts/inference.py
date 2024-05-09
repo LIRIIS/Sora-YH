@@ -1,9 +1,9 @@
 import os
 
-import colossalai
+# import colossalai
 import torch
 import torch.distributed as dist
-from colossalai.cluster import DistCoordinator
+# from colossalai.cluster import DistCoordinator
 from mmengine.runner import set_random_seed
 
 from opensora.acceleration.parallel_states import set_sequence_parallel_group
@@ -22,19 +22,19 @@ def main():
     print(cfg)
 
     # init distributed
-    if os.environ.get("WORLD_SIZE", None):
-        use_dist = True
-        colossalai.launch_from_torch({})
-        coordinator = DistCoordinator()
+    # if os.environ.get("WORLD_SIZE", None):
+    #     use_dist = True
+    #     colossalai.launch_from_torch({})
+    #     coordinator = DistCoordinator()
 
-        if coordinator.world_size > 1:
-            set_sequence_parallel_group(dist.group.WORLD)
-            enable_sequence_parallelism = True
-        else:
-            enable_sequence_parallelism = False
-    else:
-        use_dist = False
-        enable_sequence_parallelism = False
+    #     if coordinator.world_size > 1:
+    #         set_sequence_parallel_group(dist.group.WORLD)
+    #         enable_sequence_parallelism = True
+    #     else:
+    #         enable_sequence_parallelism = False
+    # else:
+    use_dist = False
+    enable_sequence_parallelism = False
 
     # ======================================================
     # 2. runtime variables
@@ -55,7 +55,6 @@ def main():
     vae = build_module(cfg.vae, MODELS)
     latent_size = vae.get_latent_size(input_size)
     text_encoder = build_module(cfg.text_encoder, MODELS, device=device)  # T5 must be fp32
-
     model = build_module(
         cfg.model,
         MODELS,
@@ -63,6 +62,7 @@ def main():
         in_channels=vae.out_channels,
         caption_channels=text_encoder.output_dim,
         model_max_length=text_encoder.model_max_length,
+        dtype=dtype,
         enable_sequence_parallelism=enable_sequence_parallelism,
     )
     text_encoder.y_embedder = model.y_embedder  # hack for classifier-free guidance
@@ -156,7 +156,7 @@ def main():
             samples = vae.decode(samples.to(dtype))
 
             # 4.4. save samples
-            if not use_dist or coordinator.is_master():
+            if not use_dist:
                 for idx, sample in enumerate(samples):
                     print(f"Prompt: {batch_prompts_raw[idx]}")
                     if cfg.prompt_as_path:
