@@ -84,13 +84,13 @@ def main():
 #        )
 #        set_data_parallel_group(dist.group.WORLD)
 #    elif cfg.plugin == "zero2-seq":
-    plugin = ZeroSeqParallelPlugin(
-        sp_size=cfg.sp_size,
-        stage=2,
-        precision=cfg.dtype,
-        initial_scale=2**16,
-        max_norm=cfg.grad_clip,
-    )
+    # plugin = ZeroSeqParallelPlugin(
+    #     sp_size=cfg.sp_size,
+    #     stage=2,
+    #     precision=cfg.dtype,
+    #     initial_scale=2**16,
+    #     max_norm=cfg.grad_clip,
+    # )
     #set_sequence_parallel_group(plugin.sp_group)
     #set_data_parallel_group(plugin.dp_group)
 #    else:
