@@ -166,12 +166,12 @@ class GaussianDiffusion:
     def __init__(
         self, *, betas: torch.Tensor, model_mean_type: str, model_var_type: str, loss_type: str, device: str = "cuda"
     ):
-        if device == "cuda":
-            device = torch.device(f"cuda:{torch.cuda.current_device()}")
-        elif device == "cpu":
-            device = torch.device("cpu")
-        else:
-            raise ValueError(f"Unknown device: {device}")
+#        if device == "cuda":
+#            device = torch.device(f"cuda:{torch.cuda.current_device()}")
+#        elif device == "cpu":
+        device = torch.device("cpu")
+        #else:
+        #    raise ValueError(f"Unknown device: {device}")
         self.device = device
         self.model_mean_type = model_mean_type
         self.model_var_type = model_var_type
