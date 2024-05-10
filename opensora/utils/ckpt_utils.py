@@ -8,9 +8,9 @@ from typing import Tuple
 import torch
 import torch.distributed as dist
 import torch.nn as nn
-from colossalai.booster import Booster
-from colossalai.checkpoint_io import GeneralCheckpointIO
-from colossalai.cluster import DistCoordinator
+#from colossalai.booster import Booster
+#from colossalai.checkpoint_io import GeneralCheckpointIO
+#from colossalai.cluster import DistCoordinator
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
 from torchvision.datasets.utils import download_url
@@ -161,7 +161,7 @@ def record_model_param_shape(model: torch.nn.Module) -> dict:
 
 
 def save(
-    booster: Booster,
+#    booster: Booster,
     model: nn.Module,
     ema: nn.Module,
     optimizer: Optimizer,
@@ -170,7 +170,7 @@ def save(
     step: int,
     global_step: int,
     batch_size: int,
-    coordinator: DistCoordinator,
+ #   coordinator: DistCoordinator,
     save_dir: str,
     shape_dict: dict,
     sampler=None,
@@ -178,7 +178,7 @@ def save(
     save_dir = os.path.join(save_dir, f"epoch{epoch}-global_step{global_step}")
     os.makedirs(os.path.join(save_dir, "model"), exist_ok=True)
 
-    booster.save_model(model, os.path.join(save_dir, "model"), shard=True)
+#    booster.save_model(model, os.path.join(save_dir, "model"), shard=True)
     # ema is not boosted, so we don't need to use booster.save_model
     model_gathering(ema, shape_dict)
     global_rank = dist.get_rank()
@@ -207,7 +207,7 @@ def save(
 
 
 def load(
-    booster: Booster,
+#    booster: Booster,
     model: nn.Module,
     ema: nn.Module,
     optimizer: Optimizer,
