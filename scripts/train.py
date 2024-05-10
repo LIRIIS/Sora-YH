@@ -20,7 +20,7 @@ from tqdm import tqdm
 #     set_data_parallel_group,
 #     set_sequence_parallel_group,
 # )
-from opensora.acceleration.plugin import ZeroSeqParallelPlugin
+#from opensora.acceleration.plugin import ZeroSeqParallelPlugin
 from opensora.datasets import prepare_dataloader, prepare_variable_dataloader
 from opensora.registry import DATASETS, MODELS, SCHEDULERS, build_module
 from opensora.utils.ckpt_utils import create_logger, load, model_sharding, record_model_param_shape, save
