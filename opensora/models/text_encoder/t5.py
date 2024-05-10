@@ -162,8 +162,8 @@ class T5Encoder:
         self.model_max_length = model_max_length
         self.output_dim = self.t5.model.config.d_model
 
-        if shardformer:
-            self.shardformer_t5()
+#        if shardformer:
+#            self.shardformer_t5()
 
     def shardformer_t5(self):
         from colossalai.shardformer import ShardConfig, ShardFormer
