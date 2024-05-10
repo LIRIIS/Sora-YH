@@ -304,7 +304,7 @@ class SeqParallelAttention(Attention):
         return x
 
 
-class MultiHeadCrossAttention(nn.Module):
+class MultiHeadCrossAttention(Attention)
     def __init__(self, d_model, num_heads, attn_drop=0.0, proj_drop=0.0):
         super(MultiHeadCrossAttention, self).__init__()
         assert d_model % num_heads == 0, "d_model must be divisible by num_heads"
@@ -320,22 +320,23 @@ class MultiHeadCrossAttention(nn.Module):
         self.proj_drop = nn.Dropout(proj_drop)
 
     def forward(self, x, cond, mask=None):
-        # query/value: img tokens; key: condition; mask: if padding tokens
-        B, N, C = x.shape
+        super().forward(x)
+        # # query/value: img tokens; key: condition; mask: if padding tokens
+        # B, N, C = x.shape
 
-        q = self.q_linear(x).view(1, -1, self.num_heads, self.head_dim)
-        kv = self.kv_linear(cond).view(1, -1, 2, self.num_heads, self.head_dim)
-        k, v = kv.unbind(2)
+        # q = self.q_linear(x).view(1, -1, self.num_heads, self.head_dim)
+        # kv = self.kv_linear(cond).view(1, -1, 2, self.num_heads, self.head_dim)
+        # k, v = kv.unbind(2)
 
-        attn_bias = None
-        if mask is not None:
-            attn_bias = xformers.ops.fmha.BlockDiagonalMask.from_seqlens([N] * B, mask)
-        x = xformers.ops.memory_efficient_attention(q, k, v, p=self.attn_drop.p, attn_bias=attn_bias)
+        # attn_bias = None
+        # if mask is not None:
+        #     attn_bias = xformers.ops.fmha.BlockDiagonalMask.from_seqlens([N] * B, mask)
+        # x = xformers.ops.memory_efficient_attention(q, k, v, p=self.attn_drop.p, attn_bias=attn_bias)
 
-        x = x.view(B, -1, C)
-        x = self.proj(x)
-        x = self.proj_drop(x)
-        return x
+        # x = x.view(B, -1, C)
+        # x = self.proj(x)
+        # x = self.proj_drop(x)
+        # return x
 
 
 class SeqParallelMultiHeadCrossAttention(MultiHeadCrossAttention):
