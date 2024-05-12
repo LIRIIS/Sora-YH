@@ -21,7 +21,7 @@ model = dict(
     time_scale=1.0,
     from_pretrained="PixArt-XL-2-512x512.pth",
     enable_flashattn=False,
-    enable_layernorm_kernel=True,
+    enable_layernorm_kernel=False,
 )
 vae = dict(
     type="VideoAutoencoderKL",
