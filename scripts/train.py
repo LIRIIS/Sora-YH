@@ -46,7 +46,7 @@ def main():
     # 2. runtime variables & colossalai launch
     # ======================================================
 #    assert torch.cuda.is_available(), "Training currently requires at least one GPU."
-    assert cfg.dtype in ["fp16", "bf16"], f"Unknown mixed precision {cfg.dtype}"
+#    assert cfg.dtype in ["fp16", "bf16"], f"Unknown mixed precision {cfg.dtype}"
 
     # 2.1. colossalai init distributed training
     # we set a very large timeout to avoid some processes exit early
@@ -59,7 +59,7 @@ def main():
     device = 'cpu'
     print("the device we are using is:",device)
 
-    dtype = to_torch_dtype(cfg.dtype)
+    dtype = torch.float32
 
     # 2.2. init logger, tensorboard & wandb
  #   if not coordinator.is_master():
@@ -142,6 +142,7 @@ def main():
         model_max_length=text_encoder.model_max_length,
         dtype=dtype,
     )
+    # print(model.module)
     model_numel, model_numel_trainable = get_model_numel(model)
     logger.info(
         f"Trainable model params: {format_numel_str(model_numel_trainable)}, Total model params: {format_numel_str(model_numel)}"
@@ -173,7 +174,11 @@ def main():
     #if cfg.grad_checkpoint:
     #    set_grad_checkpoint(model)
     model.train()
+
+    print("prepare training,beging ema!!")
     update_ema(ema, model, decay=0, sharded=False)
+
+    print("prepare finished!")
     ema.eval()
     if cfg.mask_ratios is not None:
         mask_generator = MaskGenerator(cfg.mask_ratios)
@@ -263,13 +268,15 @@ def main():
 
                 # Backward & update
                 loss = loss_dict["loss"].mean()
+                # loss.backward()
 #                booster.backward(loss=loss, optimizer=optimizer)
                 optimizer.step()
                 optimizer.zero_grad()
 
                 # Update EMA
-                update_ema(ema, model.module, optimizer=optimizer)
-
+                # print("the second module:",model)
+                # update_ema(ema, model, optimizer=optimizer)
+                # print("ema finished!!!!!!!!!!")
                 # Log loss values:
                 all_reduce_mean(loss)
                 running_loss += loss.item()
